@@ -2,6 +2,12 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+
+#if UNITY_EDITOR        // like other namespaces, this is needed for the #if #else #endif things in Exit()
+using UnityEditor;
+#endif
+
 
 // Sets the script to be executed later than all default scripts
 // This is helpful for UI, since other things may need to be initialized before setting the UI
@@ -20,5 +26,19 @@ public class MenuUIHandler : MonoBehaviour
         ColorPicker.Init();
         //this will call the NewColorSelected function when the color picker have a color button clicked.
         ColorPicker.onColorChanged += NewColorSelected;
+    }
+
+    public void StartNew()
+    {
+        SceneManager.LoadScene(1);
+    }
+
+    public void Exit()
+    {
+#if UNITY_EDITOR        // these if/else statements with hashtags are instructions for the compiler. It's the same as: if (Unity_EDITOR) {} else {}
+        EditorApplication.ExitPlaymode();
+#else
+        Application.Quit(); // original code to quit Unity player
+#endif
     }
 }
