@@ -18,14 +18,16 @@ public class MenuUIHandler : MonoBehaviour
 
     public void NewColorSelected(Color color)
     {
-        // add code here to handle when a color is selected
+        MainManager.Instance.TeamColor = color;     // The color that the user selects is now stored in MainManager, so you
+                                                    // can access the TeamColor variable from the Main scene to retrieve it
     }
     
     private void Start()
     {
-        ColorPicker.Init();
-        //this will call the NewColorSelected function when the color picker have a color button clicked.
+        ColorPicker.Init();     // This will call the NewColorSelected function when the color picker have a color button clicked.
         ColorPicker.onColorChanged += NewColorSelected;
+
+        ColorPicker.SelectColor(MainManager.Instance.TeamColor);    // This line will pre-select the saved color in the MainManager (if there is one) when the menu is launched
     }
 
     public void StartNew()
@@ -35,10 +37,23 @@ public class MenuUIHandler : MonoBehaviour
 
     public void Exit()
     {
-#if UNITY_EDITOR        // these if/else statements with hashtags are instructions for the compiler. It's the same as: if (Unity_EDITOR) {} else {}
+#if UNITY_EDITOR        // These if/else statements with hashtags are instructions for the compiler. It's the same as: if (Unity_EDITOR) {} else {}
         EditorApplication.ExitPlaymode();
 #else
-        Application.Quit(); // original code to quit Unity player
+        Application.Quit(); // Original code to quit Unity player
 #endif
+
+        MainManager.Instance.SaveColor(); 
+    }
+
+    public void SaveColorClicked()
+    {
+        MainManager.Instance.SaveColor();
+    }
+
+    public void LoadColorClicked()
+    {
+        MainManager.Instance.LoadColor();
+        ColorPicker.SelectColor(MainManager.Instance.TeamColor);
     }
 }
